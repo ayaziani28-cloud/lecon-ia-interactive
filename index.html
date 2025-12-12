@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction à l'IA - 8 ans</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1000px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        
+        .progress {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s;
+        }
+        
+        .progress-dot.active {
+            width: 40px;
+            background: #667eea;
+            border-radius: 6px;
+        }
+        
+        .content {
+            min-height: 400px;
+            margin-bottom: 30px;
+        }
+        
+        .intro-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-box {
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .feature-box .emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .example-card {
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .example-card .emoji {
+            font-size: 3em;
+        }
+        
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .activity-item {
+            padding: 20px;
+            border-radius: 15px;
+            border: 4px solid #ddd;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .activity-item:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .activity-item.selected-correct {
+            background: #c6f6d5;
+            border-color: #38a169;
+        }
+        
+        .activity-item.selected-wrong {
+            background: #fed7d7;
+            border-color: #e53e3e;
+        }
+        
+        .activity-item .emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .success-message {
+            background: #c6f6d5;
+            border: 4px solid #38a169;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        .activity2-box {
+            background: #e9d8fd;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 4px solid #9f7aea;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-family: inherit;
+            margin-top: 15px;
+        }
+        
+        .hints-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .hint-box {
+            padding: 15px;
+            border-radius: 10px;
+            background: #fff;
+        }
+        
+        .quiz-box {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .quiz-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .quiz-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: #e2e8f0;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .quiz-btn:hover {
+            background: #cbd5e0;
+        }
+        
+        .quiz-btn.correct {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .quiz-btn.wrong {
+            background: #f56565;
+            color: white;
+        }
+        
+        .final-message {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .final-message .emoji {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:disabled {
+            background: #e2e8f0;
+            color: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        .nav-btn:not(:disabled) {
+            background: #667eea;
+            color: white;
+        }
+        
+        .nav-btn:not(:disabled):hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .slide-counter {
+            color: #718096;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Slide 1: Introduction -->
+        <div class="slide active" data-slide="0">
+            <h1>L'Intelligence Artificielle, c'est quoi ? 🤖</h1>
+            <div class="progress">
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+            <div class="content">
+                <div class="intro-box">
+                    <p style="margin-bottom: 20px;">Imagine un ordinateur qui peut apprendre, comme toi à l'école ! 🎓</p>
+                    <p>C'est ça, l'Intelligence Artificielle (ou IA) !</p>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-box" style="background: #fef3c7;">
+                        <div class="emoji">👀</div>
+                        <p>Elle peut voir</p>
+                    </div>
+                    <div class="feature-box" style="background: #d1fae5;">
+                        <div class="emoji">👂</div>
+                        <p>Elle peut écouter</p>
+                    </div>
+                    <div class="feature-box" style="background: #e9d8fd;">
+                        <div class="emoji">🧠</div>
+                        <p>Elle peut réfléchir</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Exemples -->
+        <div class="slide" data-slide="1">
+            <h1>L'IA dans ta vie de tous les jours 🏠</h1>
+            <div class="progress">
+                <div class="progress-dot"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+            <div class="content">
+                <div class="example-card" style="background: linear-gradient(to right, #fce7f3, #e9d8fd);">
+                    <div class="emoji">📱</div>
+                    <div>
+                        <h3>Les assistants vocaux</h3>
+                        <p>Alexa, Siri, Google Assistant</p>
+                    </div>
+                </div>
+                <div class="example-card" style="background: linear-gradient(to right, #dbeafe, #cffafe);">
+                    <div class="emoji">🎮</div>
+                    <div>
+                        <h3>Les jeux vidéo</h3>
+                        <p>Les personnages intelligents qui jouent contre toi</p>
+                    </div>
+                </div>
+                <div class="example-card" style="background: linear-gradient(to right, #d1fae5, #fef3c7);">
+                    <div class="emoji">📺</div>
+                    <div>
+                        <h3>Netflix et YouTube</h3>
+                        <p>Ils te proposent des vidéos que tu pourrais aimer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Activité 1 -->
+        <div class="slide" data-slide="2">
+            <h1>Activité 1 : Trouve l'IA ! 🔍</h1>
+            <div class="progress">
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+            <div class="content">
+                <div style="background: #fed7aa; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                    <p style="font-size: 1.3em; font-weight: bold; text-align: center;">
+                        Clique sur les objets qui utilisent l'Intelligence Artificielle :
+                    </p>
+                </div>
+                <div class="activity-grid" id="activity1Grid">
+                    <div class="activity-item" data-has-ia="true" data-id="robot">
+                        <div class="emoji">🤖</div>
+                        <p><strong>Robot aspirateur</strong></p>
+                    </div>
+                    <div class="activity-item" data-has-ia="false" data-id="bike">
+                        <div class="emoji">🚲</div>
+                        <p><strong>Vélo</strong></p>
+                    </div>
+                    <div class="activity-item" data-has-ia="true" data-id="tablet">
+                        <div class="emoji">📱</div>
+                        <p><strong>Tablette</strong></p>
+                    </div>
+                    <div class="activity-item" data-has-ia="false" data-id="ball">
+                        <div class="emoji">⚽</div>
+                        <p><strong>Ballon</strong></p>
+                    </div>
+                    <div class="activity-item" data-has-ia="true" data-id="car">
+                        <div class="emoji">🚗</div>
+                        <p><strong>Voiture intelligente</strong></p>
+                    </div>
+                    <div class="activity-item" data-has-ia="false" data-id="book">
+                        <div class="emoji">📚</div>
+                        <p><strong>Livre</strong></p>
+                    </div>
+                </div>
+                <div id="successMessage1" style="display: none;" class="success-message">
+                    🎉 Bravo ! Tu as trouvé tous les objets avec IA !
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Activité 2 -->
+        <div class="slide" data-slide="3">
+            <h1>Activité 2 : À toi de jouer ! 🎨</h1>
+            <div class="progress">
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot active"></div>
+                <div class="progress-dot"></div>
+            </div>
+            <div class="content">
+                <div class="activity2-box">
+                    <p style="font-size: 1.3em; font-weight: bold; margin-bottom: 15px;">
+                        Si tu pouvais créer une IA pour t'aider, que ferait-elle ?
+                    </p>
+                    <textarea placeholder="Exemple : Une IA qui range ma chambre automatiquement..."></textarea>
+                </div>
+                <div class="hints-grid">
+                    <div class="hint-box" style="background: #dbeafe;">
+                        <p style="font-weight: bold; margin-bottom: 10px;">💡 Idées :</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Une IA qui fait mes devoirs</li>
+                            <li>Une IA qui cuisine</li>
+                            <li>Une IA qui dessine</li>
+                        </ul>
+                    </div>
+                    <div class="hint-box" style="background: #fef3c7;">
+                        <p style="font-weight: bold; margin-bottom: 10px;">🤔 Réfléchis :</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Qu'est-ce qu'elle ferait ?</li>
+                            <li>Comment t'aiderait-elle ?</li>
+                            <li>Serait-ce utile ?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Conclusion -->
+        <div class="slide" data-slide="4">
+            <h1>Ce que tu as appris aujourd'hui ! 🌟</h1>
+            <div class="progress">
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot active"></div>
+            </div>
+            <div class="content">
+                <div style="background: linear-gradient(to right, #fef3c7, #fed7aa); padding: 30px; border-radius: 20px;">
+                    <p style="font-size: 1.5em; font-weight: bold; margin-bottom: 20px;">Quiz rapide :</p>
+                    
+                    <div class="quiz-box">
+                        <p style="font-weight: bold; margin-bottom: 10px;">1. L'IA peut-elle apprendre comme toi ?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-btn" data-answer="q1" data-correct="true">Oui</button>
+                            <button class="quiz-btn" data-answer="q1" data-correct="false">Non</button>
+                        </div>
+                    </div>
+
+                    <div class="quiz-box">
+                        <p style="font-weight: bold; margin-bottom: 10px;">2. Où trouve-t-on l'IA ?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-btn" data-answer="q2" data-correct="true">Dans les téléphones</button>
+                            <button class="quiz-btn" data-answer="q2" data-correct="false">Seulement dans les robots</button>
+                            <button class="quiz-btn" data-answer="q2" data-correct="false">Nulle part</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="finalMessage" style="display: none;" class="final-message">
+                    <div class="emoji">🎉</div>
+                    <h2 style="font-size: 2em; margin-bottom: 10px;">Félicitations !</h2>
+                    <p style="font-size: 1.3em;">Tu as tout compris sur l'IA !</p>
+                </div>
+
+                <div style="background: #dbeafe; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                    <p style="font-size: 1.2em; font-weight: bold; text-align: center;">
+                        L'IA est partout autour de nous et elle nous aide chaque jour ! 🚀
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">◀ Précédent</button>
+            <div class="slide-counter" id="slideCounter">Slide 1 / 5</div>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Suivant ▶</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 5;
+        let selectedItems = new Set();
+        let correctAnswers = { q1: false, q2: false };
+
+        function updateSlideDisplay() {
+            document.querySelectorAll('.slide').forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            document.getElementById('slideCounter').textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlideDisplay();
+            }
+        }
+
+        // Activité 1
+        document.getElementById('activity1Grid').addEventListener('click', (e) => {
+            const item = e.target.closest('.activity-item');
+            if (!item) return;
+
+            const hasIA = item.dataset.hasIa === 'true';
+            const id = item.dataset.id;
+
+            if (selectedItems.has(id)) {
+                selectedItems.delete(id);
+                item.classList.remove('selected-correct', 'selected-wrong');
+            } else {
+                selectedItems.add(id);
+                if (hasIA) {
+                    item.classList.add('selected-correct');
+                } else {
+                    item.classList.add('selected-wrong');
+                }
+            }
+
+            // Vérifier si les 3 bons sont sélectionnés
+            const correctSelections = Array.from(selectedItems).filter(id => {
+                const el = document.querySelector(`[data-id="${id}"]`);
+                return el && el.dataset.hasIa === 'true';
+            });
+
+            if (correctSelections.length === 3 && selectedItems.size === 3) {
+                document.getElementById('successMessage1').style.display = 'block';
+            } else {
+                document.getElementById('successMessage1').style.display = 'none';
+            }
+        });
+
+        // Quiz
+        document.querySelectorAll('.quiz-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.dataset.answer;
+                const isCorrect = btn.dataset.correct === 'true';
+                
+                // Désactiver tous les boutons de cette question
+                document.querySelectorAll(`[data-answer="${answer}"]`).forEach(b => {
+                    b.classList.remove('correct', 'wrong');
+                });
+
+                // Marquer la réponse
+                if (isCorrect) {
+                    btn.classList.add('correct');
+                    correctAnswers[answer] = true;
+                } else {
+                    btn.classList.add('wrong');
+                    correctAnswers[answer] = false;
+                }
+
+                // Vérifier si les deux réponses sont correctes
+                if (correctAnswers.q1 && correctAnswers.q2) {
+                    document.getElementById('finalMessage').style.display = 'block';
+                }
+            });
+        });
+
+        // Navigation clavier
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        updateSlideDisplay();
+    </script>
+</body>
+</html>
